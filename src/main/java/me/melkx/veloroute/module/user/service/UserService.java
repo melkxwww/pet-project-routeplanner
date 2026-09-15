@@ -3,10 +3,7 @@ package me.melkx.veloroute.module.user.service;
 import me.melkx.veloroute.module.user.db.entity.UserEntity;
 import me.melkx.veloroute.module.user.db.repository.UserRepository;
 import me.melkx.veloroute.module.user.dto.request.UserPasswordChangingRequestDto;
-import me.melkx.veloroute.module.user.dto.request.UserRegistrationRequestDto;
 import me.melkx.veloroute.module.user.dto.response.UserPersonalInfoResponseDto;
-import me.melkx.veloroute.module.user.dto.response.UserRegistrationResponseDto;
-import me.melkx.veloroute.module.user.exception.EmailAlreadyExistsException;
 import me.melkx.veloroute.module.user.exception.IdenticalPasswordsException;
 import me.melkx.veloroute.module.user.exception.InvalidPasswordException;
 import me.melkx.veloroute.module.user.exception.UserNotFoundException;
@@ -24,20 +21,6 @@ public class UserService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Transactional
-    public UserRegistrationResponseDto register(UserRegistrationRequestDto request) {
-        if(userRepository.containsEmail(request.email()))
-            throw new EmailAlreadyExistsException("Email already exists");
-
-        UserEntity user = UserEntity.builder()
-                .email(request.email())
-                .passwordHash(passwordEncoder.encode(request.password()))
-                .build();
-
-        userRepository.save(user);
-        return new UserRegistrationResponseDto(user.getId(), user.getEmail());
     }
 
     public UserPersonalInfoResponseDto getPersonalInfo(long userId) {
