@@ -9,9 +9,9 @@
   </parent>
 
   <groupId>me.melkx</groupId>
-  <artifactId>veloroute</artifactId>
+  <artifactId>routeplanner</artifactId>
   <version>0.0.1</version>
-  <name>veloroute</name>
+  <name>routeplanner</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,6 +37,10 @@
   </repositories>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
     <dependency>
       <groupId>me.melkx</groupId>
       <artifactId>common-auth-credentials</artifactId>
