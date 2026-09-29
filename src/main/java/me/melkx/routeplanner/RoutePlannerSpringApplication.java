@@ -6,8 +6,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableCaching
-public class VelorouteSpringApplication {
+public class RoutePlannerSpringApplication {
     public static void main(String[] args) {
-        SpringApplication.run(VelorouteSpringApplication.class, args);
+        SpringApplication.run(RoutePlannerSpringApplication.class, args);
     }
 }

@@ -2,8 +2,7 @@
 -- USERS
 -- ============================================================
 CREATE TABLE users (
-    id              BIGSERIAL PRIMARY KEY,
-    public_id       UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+    id              UUID PRIMARY KEY,
     email           TEXT UNIQUE NOT NULL,
     password_hash   TEXT NOT NULL,
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,

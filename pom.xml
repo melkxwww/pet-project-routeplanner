@@ -23,6 +23,7 @@
     <gt.version>33.2</gt.version>
     <graphopper.version>11.0</graphopper.version>
     <lombok.version>1.18.46</lombok.version>
+    <common-libs.version>0.0.1</common-libs.version>
   </properties>
 
   <repositories>
@@ -43,8 +44,8 @@
     </dependency>
     <dependency>
       <groupId>me.melkx</groupId>
-      <artifactId>common-auth-credentials</artifactId>
-      <version>0.0.1</version>
+      <artifactId>common-security-jwt</artifactId>
+      <version>${common-libs.version}</version>
     </dependency>
     <dependency>
       <groupId>io.hypersistence</groupId>

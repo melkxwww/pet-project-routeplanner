@@ -1,4 +1,4 @@
-package me.melkx.routeplanner.module.user;
+package me.melkx.routeplanner.infrastructure.security;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.ReportAsSingleViolation;
