@@ -1,4 +1,4 @@
-package me.melkx.routeplanner.module.route;
+package me.melkx.routeplanner.core;
 
 public enum SurfaceType {
     ASPHALT,

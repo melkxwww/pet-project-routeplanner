@@ -1,10 +1,11 @@
-package me.melkx.routeplanner.infrastructure.security;
+package me.melkx.routeplanner.infrastructure.security.service;
 
 import lombok.extern.slf4j.Slf4j;
 import me.melkx.common.jwt.JwtGenerator;
 import me.melkx.common.jwt.JwtParser;
 import me.melkx.common.lang.ValueResult;
 import me.melkx.routeplanner.infrastructure.security.dto.JwtTokenPairResponseDto;
+import me.melkx.routeplanner.infrastructure.security.JwtValidityProperties;
 import me.melkx.routeplanner.infrastructure.security.dto.TerminateRequestDto;
 import me.melkx.routeplanner.infrastructure.security.exception.InvalidRefreshTokenException;
 import me.melkx.routeplanner.infrastructure.security.exception.RefreshTokenOwnershipException;

@@ -4,9 +4,9 @@ import com.graphhopper.routing.ev.DecimalEncodedValue;
 import com.graphhopper.routing.ev.EnumEncodedValue;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
-import me.melkx.routeplanner.module.route.DistributionAxis;
-import me.melkx.routeplanner.module.route.ScalarAxis;
-import me.melkx.routeplanner.module.route.SurfaceType;
+import me.melkx.routeplanner.core.DistributionAxis;
+import me.melkx.routeplanner.core.ScalarAxis;
+import me.melkx.routeplanner.core.SurfaceType;
 
 import java.util.*;
 import java.util.stream.Collectors;

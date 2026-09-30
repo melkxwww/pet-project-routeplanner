@@ -6,6 +6,8 @@ import me.melkx.common.lang.ValueResult;
 import me.melkx.common.security.jwt.AuthorizationHeaderExtractingUtil;
 import me.melkx.routeplanner.infrastructure.security.dto.*;
 import me.melkx.routeplanner.infrastructure.security.exception.InvalidRefreshTokenException;
+import me.melkx.routeplanner.infrastructure.security.service.JwtAuthService;
+import me.melkx.routeplanner.infrastructure.security.service.JwtSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +39,8 @@ public class JwtAuthController {
 
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequestDto request,
-                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
-        authService.changePassword(request, userDetails.id());
+                                               @AuthenticationPrincipal UserContext user) {
+        authService.changePassword(request, user.id());
         return ResponseEntity.noContent().build();
     }
 
@@ -55,14 +57,14 @@ public class JwtAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@Valid @RequestBody TerminateRequestDto request,
-                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-        sessionService.terminateSession(request, userDetails.id());
+                                       @AuthenticationPrincipal UserContext user) {
+        sessionService.terminateSession(request, user.id());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/logout-all")
-    public ResponseEntity<Void> logoutAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        sessionService.terminateAllSessions(userDetails.id());
+    public ResponseEntity<Void> logoutAll(@AuthenticationPrincipal UserContext user) {
+        sessionService.terminateAllSessions(user.id());
         return ResponseEntity.noContent().build();
     }
 }

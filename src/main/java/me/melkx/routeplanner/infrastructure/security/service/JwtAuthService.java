@@ -1,4 +1,4 @@
-package me.melkx.routeplanner.infrastructure.security;
+package me.melkx.routeplanner.infrastructure.security.service;
 
 import lombok.extern.slf4j.Slf4j;
 import me.melkx.routeplanner.infrastructure.security.dto.ChangePasswordRequestDto;

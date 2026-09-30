@@ -5,48 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="831a6a69-68db-4038-8bae-ee893b1335b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/GlobalControllerAdvice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/CustomUserDetails.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/CustomUserDetailsLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthControllerAdvice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtSessionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtValidityProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/Password.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/ChangePasswordRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/JwtTokenPairResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/LoginRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/RegisterRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/TerminateRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/dto/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/AuthException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/EmailAlreadyExistsException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/InvalidCredentialsException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/InvalidPasswordException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/InvalidRefreshTokenException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/RefreshTokenOwnershipException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/SamePasswordException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/UserNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/exception/package-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteGenerateRequestDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/VelorouteSpringApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/RoutePlannerSpringApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/IdenticalPasswordsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/InvalidPasswordException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/Password.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserIdPassword.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserPasswordChangingRequestDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserPersonalInfoResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserRegistrationRequestDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserRegistrationResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/user/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/UserContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/CustomUserDetailsLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/JwtUserContextService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtAuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/JwtAuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtSessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/JwtSessionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/AutoRoute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Constraints.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/DistributionAxis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/DistributionAxis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/EndpointMode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/ManualRoute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Point.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Range.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Route.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/ScalarAxis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/ScalarAxis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/SurfaceType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/SurfaceType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Target.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/TargetMode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/Waypoint.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,18 +63,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/defix/OpenideProjects/pet-project-routeplanner",
-    "settings.editor.selected.configurable": "copyright"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/defix/OpenideProjects/pet-project-routeplanner&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;copyright&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="RoutePlannerSpringApplication" type="AmplicodeSpringBootApplication" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="me.melkx.routeplanner.RoutePlannerSpringApplication" />

@@ -5,7 +5,7 @@ import com.graphhopper.routing.WeightingFactory;
 import com.graphhopper.routing.ev.*;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PMap;
-import me.melkx.routeplanner.module.route.SurfaceType;
+import me.melkx.routeplanner.core.SurfaceType;
 
 import java.util.List;
 import java.util.Map;

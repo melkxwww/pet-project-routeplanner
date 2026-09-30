@@ -1,4 +1,4 @@
-package me.melkx.routeplanner.module.route;
+package me.melkx.routeplanner.core;
 
 import lombok.Getter;
 
