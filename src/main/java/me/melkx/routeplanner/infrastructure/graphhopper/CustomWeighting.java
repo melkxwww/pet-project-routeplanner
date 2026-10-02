@@ -5,7 +5,7 @@ import com.graphhopper.routing.ev.EnumEncodedValue;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
 import me.melkx.routeplanner.core.*;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,7 +102,6 @@ public class CustomWeighting implements Weighting {
         for (DistributionEntry entry : distributions) {
             Enum<?> currentValue = edge.get(entry.encodedValue());
 
-            // Пустое множество констрейнтов => ничего не блокируем.
             if (!entry.constraints().isEmpty() && entry.constraints().contains(currentValue)) {
                 return CalcResult.blocked();
             }

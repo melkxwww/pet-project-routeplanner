@@ -5,22 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="831a6a69-68db-4038-8bae-ee893b1335b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/EndpointMode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Point.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Preferences.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Range.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/RouteType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/TargetMode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/DistributionAxis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/DistributionProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/ScalarAxis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/ScalarProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Preferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Preferences.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtValidityProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/JwtValidityProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteGenerateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteGenerateRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
