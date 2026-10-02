@@ -10,7 +10,7 @@ import me.melkx.routeplanner.core.ScalarAxis;
 import java.util.List;
 import java.util.Map;
 
-public record RouteGenerateRequestDto(@Valid Route route, @Valid Constraints constraints) {
+public record RouteGenerateRequest(@Valid Route route, @Valid Constraints constraints) {
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXISTING_PROPERTY,

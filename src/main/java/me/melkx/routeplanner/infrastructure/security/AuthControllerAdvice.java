@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "me.melkx.routeplanner.infrastructure.security")
-public class JwtAuthControllerAdvice {
+public class AuthControllerAdvice {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<FormattedError> handleAuthException(AuthException ex,

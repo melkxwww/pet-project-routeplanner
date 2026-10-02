@@ -3,10 +3,8 @@ package me.melkx.routeplanner.infrastructure.security.service;
 import lombok.extern.slf4j.Slf4j;
 import me.melkx.common.jwt.JwtGenerator;
 import me.melkx.common.jwt.JwtParser;
-import me.melkx.common.lang.ValueResult;
-import me.melkx.routeplanner.infrastructure.security.dto.JwtTokenPairResponseDto;
+import me.melkx.routeplanner.infrastructure.security.dto.JwtTokenPair;
 import me.melkx.routeplanner.infrastructure.security.JwtValidityProperties;
-import me.melkx.routeplanner.infrastructure.security.dto.TerminateRequestDto;
 import me.melkx.routeplanner.infrastructure.security.exception.InvalidRefreshTokenException;
 import me.melkx.routeplanner.infrastructure.security.exception.RefreshTokenOwnershipException;
 import org.springframework.context.event.EventListener;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class JwtSessionService {
+public class SessionService {
     private static final String REFRESH_PREFIX = "r:";
     private static final String USER_PREFIX = "u:";
     private static final String USER_SUFFIX = ":r";
@@ -48,17 +46,17 @@ public class JwtSessionService {
     private final JwtParser jwtParser;
     private final JwtValidityProperties validityProperties;
 
-    public JwtSessionService(StringRedisTemplate redisTemplate,
-                             JwtGenerator jwtGenerator,
-                             JwtParser jwtParser,
-                             JwtValidityProperties validityProperties) {
+    public SessionService(StringRedisTemplate redisTemplate,
+                          JwtGenerator jwtGenerator,
+                          JwtParser jwtParser,
+                          JwtValidityProperties validityProperties) {
         this.redisTemplate = redisTemplate;
         this.jwtGenerator = jwtGenerator;
         this.jwtParser = jwtParser;
         this.validityProperties = validityProperties;
     }
 
-    public JwtTokenPairResponseDto newSession(UUID userId) {
+    public JwtTokenPair newSession(UUID userId) {
         log.debug("Creating new session, userId={}", userId);
 
         RefreshTokenGenerationResult refresh = generateRefreshToken(userId);
@@ -68,22 +66,22 @@ public class JwtSessionService {
 
         log.info("Session created, userId={}, jti={}, ttl={}s",
                 userId, refresh.jti(), refresh.ttl().toSeconds());
-        return new JwtTokenPairResponseDto(accessToken, refresh.refreshToken());
+        return new JwtTokenPair(accessToken, refresh.refreshToken());
     }
 
-    public void terminateSession(TerminateRequestDto request, UUID authenticatedUserId) {
-        log.debug("Terminating session, userId={}", authenticatedUserId);
+    public void terminateSession(String refreshToken, UUID userId) {
+        log.debug("Terminating session, userId={}", userId);
 
-        if (request.refreshToken() == null) {
-            log.warn("Terminate session failed: refresh token is null, userId={}", authenticatedUserId);
+        if (refreshToken == null) {
+            log.warn("Terminate session failed: refresh token is null, userId={}", userId);
             throw new InvalidRefreshTokenException("Refresh token is required");
         }
 
-        ToParseRefreshTokenPayload payload = parseRefreshToken(request.refreshToken());
+        ToParseRefreshTokenPayload payload = jwtParser.parse(refreshToken, ToParseRefreshTokenPayload.class);
 
-        if (!payload.sub().equals(authenticatedUserId)) {
+        if (!payload.sub().equals(userId)) {
             log.warn("Terminate session failed: ownership mismatch, authenticatedUserId={}, tokenUserId={}",
-                    authenticatedUserId, payload.sub());
+                    userId, payload.sub());
             throw new RefreshTokenOwnershipException();
         }
 
@@ -111,7 +109,7 @@ public class JwtSessionService {
         log.info("All sessions terminated, userId={}, count={}", userId, jtis.size());
     }
 
-    public JwtTokenPairResponseDto extendSession(String refreshToken) {
+    public JwtTokenPair extendSession(String refreshToken) {
         log.debug("Extending session");
 
         if (refreshToken == null) {
@@ -119,7 +117,7 @@ public class JwtSessionService {
             throw new InvalidRefreshTokenException("Refresh token is required");
         }
 
-        ToParseRefreshTokenPayload old = parseRefreshToken(refreshToken);
+        ToParseRefreshTokenPayload old = jwtParser.parse(refreshToken, ToParseRefreshTokenPayload.class);
         String oldKey = prepareRefreshStorageKey(old.sub(), old.jti());
 
         if (Boolean.FALSE.equals(redisTemplate.hasKey(oldKey))) {
@@ -128,7 +126,6 @@ public class JwtSessionService {
             throw new InvalidRefreshTokenException("Refresh token is revoked or already used");
         }
 
-        // Ротация: отзываем старый, выдаём новый
         revokeRefresh(old.sub(), old.jti());
         log.debug("Old refresh token revoked, userId={}, jti={}", old.sub(), old.jti());
 
@@ -139,7 +136,7 @@ public class JwtSessionService {
         log.info("Session extended, userId={}, oldJti={}, newJti={}",
                 old.sub(), old.jti(), newRefresh.jti());
 
-        return new JwtTokenPairResponseDto(newAccess, newRefresh.refreshToken());
+        return new JwtTokenPair(newAccess, newRefresh.refreshToken());
     }
 
     private void registerRefresh(UUID userId, UUID jti, Duration ttl) {
@@ -172,21 +169,6 @@ public class JwtSessionService {
                 List.of(userKey),
                 jti.toString()
         );
-    }
-
-    private ToParseRefreshTokenPayload parseRefreshToken(String token) {
-        ValueResult<ToParseRefreshTokenPayload> result =
-                jwtParser.parse(token, ToParseRefreshTokenPayload.class);
-
-        if (!result.valid()) {
-            log.debug("Refresh token parse failed: {}", result.errorMessage());
-            throw new InvalidRefreshTokenException(
-                    result.errorMessage() == null
-                            ? "Invalid refresh token"
-                            : "Invalid refresh token: " + result.errorMessage()
-            );
-        }
-        return result.getOrThrow();
     }
 
     private String generateAccessToken(UUID userId, UUID jti) {

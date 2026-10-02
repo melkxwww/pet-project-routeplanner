@@ -1,6 +1,7 @@
 package me.melkx.routeplanner.infrastructure.security.dto;
 
+import jakarta.validation.constraints.Email;
 import me.melkx.routeplanner.infrastructure.security.Password;
 
-public record ChangePasswordRequestDto(@Password String oldPassword, @Password String newPassword) {
+public record RegisterRequest(@Email String email, @Password String password) {
 }
