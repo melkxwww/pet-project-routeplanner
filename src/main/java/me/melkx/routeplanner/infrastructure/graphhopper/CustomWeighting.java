@@ -4,9 +4,8 @@ import com.graphhopper.routing.ev.DecimalEncodedValue;
 import com.graphhopper.routing.ev.EnumEncodedValue;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
-import me.melkx.routeplanner.core.DistributionAxis;
-import me.melkx.routeplanner.core.ScalarAxis;
-import me.melkx.routeplanner.core.SurfaceType;
+import me.melkx.routeplanner.core.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,29 +13,51 @@ import java.util.stream.Collectors;
 public class CustomWeighting implements Weighting {
     public static final String NAME = "custom_weighting";
 
-    private static final double MIN_MULTIPLIER = 1;
-    private static final double DISTRIBUTION_PENALTY = 1;
+    private static final double MIN_MULTIPLIER = 1.0;
+    private static final double DISTRIBUTION_PENALTY = 1.0;
+    private static final double BLOCKED_WEIGHT = Double.POSITIVE_INFINITY;
 
     private final List<ScalarEntry> scalars;
     private final List<DistributionEntry> distributions;
 
-    public CustomWeighting(
-            Map<ScalarAxis, DecimalEncodedValue> scalarEncodedValues,
-            Map<DistributionAxis, EnumEncodedValue<?>> distributionEncodedValues,
-            Map<ScalarAxis, Double> scalarPreferences,
-            Map<DistributionAxis, List<String>> distributionPreferences) {
+    public CustomWeighting(EncodedValues encodedValues,
+                           Preferences preferences,
+                           Constraints constraints) {
+        Map<ScalarProperties, Double> scalarPreferences = preferences.scalars();
+        Map<DistributionProperties, List<String>> distributionPreferences = preferences.distributions();
+        Map<ScalarProperties, Range> scalarConstraints = constraints.scalars();
+        Map<DistributionProperties, List<String>> distributionConstraints = constraints.distributions();
 
-        this.scalars = scalarEncodedValues.entrySet().stream()
-                .map(e -> new ScalarEntry(
-                        e.getValue(),
-                        require(scalarPreferences, e.getKey(), "scalarPreferences")))
-                .toList();
+        this.scalars = (scalarPreferences == null) ? List.of() :
+                encodedValues.scalars().entrySet().stream()
+                        .map(e -> new ScalarEntry(
+                                e.getValue(),
+                                require(scalarPreferences, e.getKey(), "preferences.scalars"),
+                                getOrNull(scalarConstraints, e.getKey())
+                        )).toList();
 
-        this.distributions = distributionEncodedValues.entrySet().stream()
-                .map(e -> new DistributionEntry(
-                        e.getValue(),
-                        resolvePreferences(e.getValue(), require(distributionPreferences, e.getKey(), "distributionPreferences"))))
-                .toList();
+        this.distributions = (distributionPreferences == null) ? List.of() :
+                encodedValues.distributions().entrySet().stream()
+                        .map(e -> {
+                            DistributionProperties key = e.getKey();
+                            EnumEncodedValue<?> encodedValue = e.getValue();
+
+                            List<String> rawConstraints = getOrNull(distributionConstraints, key);
+                            Set<Enum<?>> resolvedConstraints =
+                                    (rawConstraints == null || rawConstraints.isEmpty())
+                                            ? Set.of()
+                                            : resolveEnumSet(encodedValue, rawConstraints,
+                                            "constraints.distributions[" + key + "]");
+
+                            return new DistributionEntry(
+                                    encodedValue,
+                                    resolveEnumSet(
+                                            encodedValue,
+                                            require(distributionPreferences, key, "preferences.distributions"),
+                                            "preferences.distributions[" + key + "]"),
+                                    resolvedConstraints);
+                        })
+                        .toList();
     }
 
     @Override
@@ -46,29 +67,51 @@ public class CustomWeighting implements Weighting {
 
     @Override
     public double calcEdgeWeight(EdgeIteratorState edge, boolean reverse) {
-        double multiplier = MIN_MULTIPLIER
-                + calcScalarParams(edge)
-                + calcDistributionParams(edge);
-        return edge.getDistance() * multiplier;
+        CalcResult scalarResult = calcScalarParams(edge);
+        if (!scalarResult.isAccessible()) {
+            return BLOCKED_WEIGHT;
+        }
+
+        CalcResult distributionResult = calcDistributionParams(edge);
+        if (!distributionResult.isAccessible()) {
+            return BLOCKED_WEIGHT;
+        }
+
+        return edge.getDistance()
+                * (MIN_MULTIPLIER + scalarResult.weight() + distributionResult.weight());
     }
 
-    private double calcScalarParams(EdgeIteratorState edge) {
+    private CalcResult calcScalarParams(EdgeIteratorState edge) {
         double result = 0;
         for (ScalarEntry entry : scalars) {
-            result += Math.abs(edge.get(entry.encodedValue()) - entry.preference());
+            double currentValue = edge.get(entry.encodedValue());
+
+            Range constraint = entry.constraint();
+            if (constraint != null
+                    && (currentValue > constraint.max() || currentValue < constraint.min())) {
+                return CalcResult.blocked();
+            }
+
+            result += Math.abs(currentValue - entry.preference());
         }
-        return result;
+        return CalcResult.accessible(result);
     }
 
-    private double calcDistributionParams(EdgeIteratorState edge) {
+    private CalcResult calcDistributionParams(EdgeIteratorState edge) {
         double result = 0;
         for (DistributionEntry entry : distributions) {
-            if (!entry.preferences().contains(edge.get(entry.encodedValue()))) {
+            Enum<?> currentValue = edge.get(entry.encodedValue());
+
+            // Пустое множество констрейнтов => ничего не блокируем.
+            if (!entry.constraints().isEmpty() && entry.constraints().contains(currentValue)) {
+                return CalcResult.blocked();
+            }
+
+            if (!entry.preferences().contains(currentValue)) {
                 result += DISTRIBUTION_PENALTY;
             }
         }
-        SurfaceType.
-        return result;
+        return CalcResult.accessible(result);
     }
 
     @Override
@@ -96,24 +139,25 @@ public class CustomWeighting implements Weighting {
         return NAME;
     }
 
-    // --- helpers ---
-
-    private static <K, V> V require(Map<K, V> map, K key, String name) {
+    private static <K, V> V require(Map<K, V> map, K key, String mapName) {
         V value = map.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(name + " is missing key: " + key);
+            throw new IllegalArgumentException(mapName + " is missing key: " + key);
         }
         return value;
     }
 
-    /**
-     * Превращает список строк из preferences в Set<Enum<?>>, сравнивая с реальными константами
-     * переданного EnumEncodedValue. Один раз при создании — потом в горячем пути только Enum.
-     */
+    @Nullable
+    private static <K, V> V getOrNull(@Nullable Map<K, V> map, K key) {
+        return map == null ? null : map.get(key);
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Set<Enum<?>> resolvePreferences(EnumEncodedValue<?> encodedValue, List<String> rawPreferences) {
-        if (rawPreferences == null || rawPreferences.isEmpty()) {
-            throw new IllegalArgumentException("distributionPreferences must not be empty");
+    private static Set<Enum<?>> resolveEnumSet(EnumEncodedValue<?> encodedValue,
+                                               List<String> rawValues,
+                                               String source) {
+        if (rawValues.isEmpty()) {
+            throw new IllegalArgumentException(source + " must not be empty");
         }
 
         Enum<?>[] constants = encodedValue.getValues();
@@ -122,13 +166,14 @@ public class CustomWeighting implements Weighting {
             byName.put(c.name().toLowerCase(Locale.ROOT), c);
         }
 
-        return rawPreferences.stream()
+        return rawValues.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .map(s -> {
                     Enum<?> e = byName.get(s);
                     if (e == null) {
                         throw new IllegalArgumentException(
-                                "Unknown value '" + s + "' for " + encodedValue.getName()
+                                "Unknown value '" + s + "' in " + source
+                                        + " for " + encodedValue.getName()
                                         + ". Allowed: " + byName.keySet());
                     }
                     return e;
@@ -136,9 +181,27 @@ public class CustomWeighting implements Weighting {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    private record ScalarEntry(DecimalEncodedValue encodedValue, double preference) {
+    public record EncodedValues(Map<ScalarProperties, DecimalEncodedValue> scalars,
+                                Map<DistributionProperties, EnumEncodedValue<?>> distributions) {
     }
 
-    private record DistributionEntry(EnumEncodedValue<?> encodedValue, Set<Enum<?>> preferences) {
+    private record CalcResult(boolean isAccessible, double weight) {
+        public static CalcResult accessible(double weight) {
+            return new CalcResult(true, weight);
+        }
+
+        public static CalcResult blocked() {
+            return new CalcResult(false, BLOCKED_WEIGHT);
+        }
+    }
+
+    private record ScalarEntry(DecimalEncodedValue encodedValue,
+                               double preference,
+                               @Nullable Range constraint) {
+    }
+
+    private record DistributionEntry(EnumEncodedValue<?> encodedValue,
+                                     Set<Enum<?>> preferences,
+                                     Set<Enum<?>> constraints) {
     }
 }

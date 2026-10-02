@@ -1,6 +1,6 @@
 package me.melkx.routeplanner.core;
 
-public enum ScalarAxis {
+public enum ScalarProperties {
     SHADINESS,
     PICTURESQUENESS,
     ROAD_QUALITY,

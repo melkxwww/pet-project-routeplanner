@@ -3,14 +3,15 @@ package me.melkx.routeplanner.module.route;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import me.melkx.routeplanner.core.DistributionAxis;
-import me.melkx.routeplanner.core.ScalarAxis;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Null;
+import me.melkx.routeplanner.core.*;
 
 import java.util.List;
-import java.util.Map;
 
-public record RouteGenerateRequest(@Valid Route route, @Valid Constraints constraints) {
+public record RouteGenerateRequest(@Valid Route route, @Valid Preferences preferences,
+                                   @Valid Constraints constraints) {
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -47,52 +48,9 @@ public record RouteGenerateRequest(@Valid Route route, @Valid Constraints constr
         }
     }
 
-    public record Constraints(@Null Map<DistributionAxis, List<String>> distributions,
-                              @Null Map<ScalarAxis, @Valid Range> scalars) {
-        public Constraints {
-            for (var entry : distributions.entrySet()) {
-                var names = entry.getKey().getLoweredNames();
-                for (String v : entry.getValue()) {
-                    String needle = v.toLowerCase();
-                    if (names.stream().noneMatch(n -> n.contains(needle))) {
-                        throw new IllegalArgumentException(
-                                "Invalid value '" + v + "' for " + entry.getKey());
-                    }
-                }
-            }
-        }
-
-        public record Range(@DecimalMin("0") Double min, @DecimalMax("1") Double max) {
-            public Range {
-                if (min > max)
-                    throw new IllegalArgumentException("Min '" + min + "' cannot be greater than Max '" + max + "'");
-            }
-        }
-    }
-
     public record Target(TargetMode mode, Double value, @Min(0) @Max(100) Integer tolerancePct) {
-        public enum TargetMode {
-            DISTANCE,
-            DURATION
-        }
-    }
-
-    public record Point(
-            @DecimalMin("-90") @DecimalMax("90") Double latitude,
-            @DecimalMin("-180") @DecimalMax("180") Double longitude
-    ) {
     }
 
     public record Waypoint(@Valid Point point, Boolean mustVisit) {
-    }
-
-    public enum RouteType {
-        P2P,
-        LOOP
-    }
-
-    public enum EndpointMode {
-        AUTO,
-        MANUAL
     }
 }
