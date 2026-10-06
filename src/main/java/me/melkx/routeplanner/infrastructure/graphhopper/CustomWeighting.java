@@ -4,7 +4,11 @@ import com.graphhopper.routing.ev.DecimalEncodedValue;
 import com.graphhopper.routing.ev.EnumEncodedValue;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
-import me.melkx.routeplanner.core.*;
+import me.melkx.routeplanner.core.property.DistributionProperties;
+import me.melkx.routeplanner.core.property.ScalarProperties;
+import me.melkx.routeplanner.module.route.PreProcessingConstraints;
+import me.melkx.routeplanner.module.route.Preferences;
+import me.melkx.routeplanner.module.route.Range;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -22,7 +26,7 @@ public class CustomWeighting implements Weighting {
 
     public CustomWeighting(EncodedValues encodedValues,
                            Preferences preferences,
-                           Constraints constraints) {
+                           PreProcessingConstraints constraints) {
         Map<ScalarProperties, Double> scalarPreferences = preferences.scalars();
         Map<DistributionProperties, List<String>> distributionPreferences = preferences.distributions();
         Map<ScalarProperties, Range> scalarConstraints = constraints.scalars();

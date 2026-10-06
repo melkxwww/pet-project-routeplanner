@@ -1,4 +1,4 @@
-package me.melkx.routeplanner.core;
+package me.melkx.routeplanner.core.property;
 
 public enum ScalarProperties {
     SHADINESS,

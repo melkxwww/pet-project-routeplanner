@@ -1,6 +1,7 @@
-package me.melkx.routeplanner.core;
+package me.melkx.routeplanner.core.property;
 
 import lombok.Getter;
+import me.melkx.routeplanner.core.SurfaceType;
 
 import java.util.Arrays;
 import java.util.Set;

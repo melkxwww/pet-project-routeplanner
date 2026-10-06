@@ -6,6 +6,10 @@ import com.graphhopper.routing.ev.*;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PMap;
 import me.melkx.routeplanner.core.*;
+import me.melkx.routeplanner.core.property.DistributionProperties;
+import me.melkx.routeplanner.core.property.ScalarProperties;
+import me.melkx.routeplanner.module.route.PreProcessingConstraints;
+import me.melkx.routeplanner.module.route.Preferences;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +46,7 @@ public class CustomGraphHopper extends GraphHopper {
                         ));
 
                 Preferences preferences = pMap.getObject(PREFERENCES_HINT_KEY, new Preferences(null, null));
-                Constraints constraints = pMap.getObject(CONSTRAINTS_HINT_KEY, new Constraints(null, null));
+                PreProcessingConstraints constraints = pMap.getObject(CONSTRAINTS_HINT_KEY, new PreProcessingConstraints(null, null));
 
                 return new CustomWeighting(encodedValues, preferences, constraints);
             }

@@ -5,10 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="831a6a69-68db-4038-8bae-ee893b1335b6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/PreProcessingConstraints.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/Distributions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/ScalarDouble.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/ScalarRange.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/ScalarValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/Scalars.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/package-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RoutePostProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RoutePreProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/dto/GenerateCandidatesCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/dto/RouteGenerateRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Constraints.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/DistributionProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/DistributionProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Point.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Preferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Preferences.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/Range.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/ScalarProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/property/ScalarProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/core/TargetMode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomGraphHopper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/graphhopper/CustomWeighting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/SessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/infrastructure/security/service/SessionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/melkx/routeplanner/module/route/RouteGenerateRequest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,15 +41,20 @@
       <list>
         <option value="AnnotationType" />
         <option value="Exception" />
-        <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
         <option value="Record" />
+        <option value="Interface" />
+        <option value="Class" />
         <option value="package-info" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleModuleStateConfig" initialized="true" />
@@ -43,18 +69,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/defix/OpenideProjects/pet-project-routeplanner&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;copyright&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/defix/OpenideProjects/pet-project-routeplanner",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "copyright"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="RoutePlannerSpringApplication" type="AmplicodeSpringBootApplication" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="me.melkx.routeplanner.RoutePlannerSpringApplication" />

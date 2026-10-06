@@ -1,7 +1,8 @@
 package me.melkx.routeplanner.infrastructure.security.service;
 
 import lombok.extern.slf4j.Slf4j;
-import me.melkx.routeplanner.infrastructure.security.dto.*;
+import me.melkx.routeplanner.infrastructure.security.dto.ChangePasswordCommand;
+import me.melkx.routeplanner.infrastructure.security.dto.JwtTokenPair;
 import me.melkx.routeplanner.infrastructure.security.exception.*;
 import me.melkx.routeplanner.module.user.UserEntity;
 import me.melkx.routeplanner.module.user.UserRepository;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Slf4j
 @Service
