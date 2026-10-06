@@ -17,21 +17,6 @@ import java.util.Map;
 
 public record RouteGenerateRequest(@Valid Route route, @Null @Valid Preferences preferences,
                                    @Null @Valid Constraints constraints) {
-
-    private final Double min;
-
-    private final Double max;
-
-    private final Map<DistributionProperties, List<String>> distributions;
-
-    public RouteGenerateRequest(Double min,
-                                Double max,
-                                Map<DistributionProperties, List<String>> distributions) {
-        this.min = min;
-        this.max = max;
-        this.distributions = distributions;
-    }
-
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -68,43 +53,7 @@ public record RouteGenerateRequest(@Valid Route route, @Null @Valid Preferences 
         }
     }
 
-    public record Constraints(@Valid @Null PreProcessingConstraints preProcessing, @Valid @Null PostProcessingConstraints postProcessing) {
-    }
-
-    public record Point(
-            @DecimalMin("-90") @DecimalMax("90") Double lat,
-            @DecimalMin("-180") @DecimalMax("180") Double lon
-    ) {
-    }
-
-    public record Preferences(@Nullable @Null Map<ScalarProperties, @DecimalMin("0") @DecimalMax("1") Double> scalars,
-                              @Nullable @Null Map<DistributionProperties, List<@NotBlank String>> distributions) {
-    }
-
-    public record Range(@DecimalMin("0") Double min, @DecimalMax("1") Double max) {
-        public Range {
-            if (min > max)
-                throw new IllegalArgumentException("Min '" + min + "' cannot be greater than Max '" + max + "'");
-        }
-    }
-
-    public record PreProcessingConstraints(@Null @Nullable Map<ScalarProperties, @Valid Range> scalars,
-                                           @Null @Nullable Map<DistributionProperties, List<@NotBlank String>> distributions) {
-        public PreProcessingConstraints {
-            if (distributions != null)
-                for (var entry : distributions.entrySet()) {
-                    var names = entry.getKey().getLoweredNames();
-                    for (String v : entry.getValue()) {
-                        String needle = v.toLowerCase();
-                        if (names.stream().noneMatch(n -> n.contains(needle))) {
-                            throw new IllegalArgumentException(
-                                    "Invalid value '" + v + "' for " + entry.getKey());
-                        }
-                    }
-                }
-        }
-    }
-
-    public record PostProcessingConstraints(@Null @Valid Range durationS, @Null @Valid Range distanceM) {
+    public record Constraints(@Null PreProcessingConstraints preProcessing,
+                              @Null PostProcessingConstraints postProcessing) {
     }
 }

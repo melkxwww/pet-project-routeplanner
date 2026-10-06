@@ -6,10 +6,10 @@ import com.graphhopper.routing.ev.*;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PMap;
 import me.melkx.routeplanner.core.*;
+import me.melkx.routeplanner.core.PreProcessingConstraints;
+import me.melkx.routeplanner.core.Preferences;
 import me.melkx.routeplanner.core.property.DistributionProperties;
 import me.melkx.routeplanner.core.property.ScalarProperties;
-import me.melkx.routeplanner.module.route.PreProcessingConstraints;
-import me.melkx.routeplanner.module.route.Preferences;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,8 @@ public class CustomGraphHopper extends GraphHopper {
                                 Map.entry(ScalarProperties.SHADINESS, encodingManager.getDecimalEncodedValue(SHADINESS_KEY)),
                                 Map.entry(ScalarProperties.ROAD_QUALITY, encodingManager.getDecimalEncodedValue(ROAD_QUALITY_KEY)),
                                 Map.entry(ScalarProperties.TRAFFIC_STRESS, encodingManager.getDecimalEncodedValue(TRAFFIC_STRESS_KEY)),
-                                Map.entry(ScalarProperties.ILLUMINATION, encodingManager.getDecimalEncodedValue(ILLUMINATION_KEY))
+                                Map.entry(ScalarProperties.ILLUMINATION, encodingManager.getDecimalEncodedValue(ILLUMINATION_KEY)),
+                                Map.entry(ScalarProperties.AVERAGE_SLOPE, encodingManager.getDecimalEncodedValue(AverageSlope.KEY))
                         ),
                         Map.ofEntries(
                                 Map.entry(
@@ -70,6 +71,7 @@ public class CustomGraphHopper extends GraphHopper {
         builder.add(new DecimalEncodedValueImpl(ROAD_QUALITY_KEY, bits, factor, false));
         builder.add(new DecimalEncodedValueImpl(TRAFFIC_STRESS_KEY, bits, factor, false));
         builder.add(new DecimalEncodedValueImpl(ILLUMINATION_KEY, bits, factor, false));
+        builder.add(AverageSlope.create());
         builder.add(new EnumEncodedValue<>(SURFACE_TYPE_KEY, SurfaceType.class));
         builder.add(OSMWayID.create());
 
