@@ -1,9 +1,16 @@
 package me.melkx.routeplanner.core;
 
-import me.melkx.routeplanner.core.property.Distributions;
+import me.melkx.routeplanner.core.property.DistributionProperties;
+import me.melkx.routeplanner.core.property.PropertiesValueValidator;
+import me.melkx.routeplanner.core.property.ScalarProperties;
 import me.melkx.routeplanner.core.property.ScalarRange;
-import me.melkx.routeplanner.core.property.Scalars;
 
-public record PreProcessingConstraints(Scalars<ScalarRange> scalars,
-                                       Distributions distributions) {
+import java.util.List;
+import java.util.Map;
+
+public record PreProcessingConstraints(Map<ScalarProperties, ScalarRange> scalars,
+                                       Map<DistributionProperties, List<String>> distributions) {
+    public PreProcessingConstraints {
+        PropertiesValueValidator.validateDistributionValues(distributions);
+    }
 }

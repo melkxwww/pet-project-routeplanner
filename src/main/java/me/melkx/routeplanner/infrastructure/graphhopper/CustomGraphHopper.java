@@ -5,9 +5,9 @@ import com.graphhopper.routing.WeightingFactory;
 import com.graphhopper.routing.ev.*;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PMap;
-import me.melkx.routeplanner.core.*;
 import me.melkx.routeplanner.core.PreProcessingConstraints;
 import me.melkx.routeplanner.core.Preferences;
+import me.melkx.routeplanner.core.SurfaceType;
 import me.melkx.routeplanner.core.property.DistributionProperties;
 import me.melkx.routeplanner.core.property.ScalarProperties;
 

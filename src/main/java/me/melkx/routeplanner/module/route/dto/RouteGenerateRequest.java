@@ -3,20 +3,13 @@ package me.melkx.routeplanner.module.route.dto;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
 import me.melkx.routeplanner.core.*;
-import me.melkx.routeplanner.core.property.DistributionProperties;
-import me.melkx.routeplanner.core.property.ScalarProperties;
-import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
-public record RouteGenerateRequest(@Valid Route route, @Null @Valid Preferences preferences,
-                                   @Null @Valid Constraints constraints) {
+public record RouteGenerateRequest(@Valid Route route, @Null Preferences preferences,
+                                   @Null Constraints constraints) {
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXISTING_PROPERTY,

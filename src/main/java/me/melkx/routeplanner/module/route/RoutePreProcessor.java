@@ -2,7 +2,6 @@ package me.melkx.routeplanner.module.route;
 
 import com.graphhopper.GraphHopper;
 import me.melkx.routeplanner.module.route.dto.GenerateCandidatesCommand;
-import me.melkx.routeplanner.module.route.dto.RouteGenerateRequest;
 import org.springframework.stereotype.Service;
 
 @Service

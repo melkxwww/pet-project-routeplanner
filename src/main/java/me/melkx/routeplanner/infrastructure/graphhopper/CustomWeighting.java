@@ -7,7 +7,6 @@ import com.graphhopper.util.EdgeIteratorState;
 import me.melkx.routeplanner.core.PreProcessingConstraints;
 import me.melkx.routeplanner.core.Preferences;
 import me.melkx.routeplanner.core.property.DistributionProperties;
-import me.melkx.routeplanner.core.property.ScalarDouble;
 import me.melkx.routeplanner.core.property.ScalarProperties;
 import me.melkx.routeplanner.core.property.ScalarRange;
 import org.jspecify.annotations.Nullable;
@@ -16,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomWeighting implements Weighting {
-
     public static final String NAME = "custom_weighting";
 
     private static final double MIN_MULTIPLIER = 1.0;
@@ -29,35 +27,41 @@ public class CustomWeighting implements Weighting {
     public CustomWeighting(EncodedValues encodedValues,
                            Preferences preferences,
                            PreProcessingConstraints constraints) {
-        this.scalars = encodedValues.scalars().entrySet().stream()
-                .map(e -> new ScalarEntry(
-                        e.getValue(),
-                        requireScalarPreference(preferences, e.getKey()),
-                        getOrNull(constraints, e.getKey())
-                ))
-                .toList();
+        Map<ScalarProperties, Double> scalarPreferences = preferences.scalars();
+        Map<DistributionProperties, List<String>> distributionPreferences = preferences.distributions();
+        Map<ScalarProperties, ScalarRange> scalarConstraints = constraints.scalars();
+        Map<DistributionProperties, List<String>> distributionConstraints = constraints.distributions();
 
-        this.distributions = encodedValues.distributions().entrySet().stream()
-                .map(e -> {
-                    DistributionProperties key = e.getKey();
-                    EnumEncodedValue<?> encodedValue = e.getValue();
+        this.scalars = (scalarPreferences == null) ? List.of() :
+                encodedValues.scalars().entrySet().stream()
+                        .map(e -> new ScalarEntry(
+                                e.getValue(),
+                                require(scalarPreferences, e.getKey(), "preferences.scalars"),
+                                getOrNull(scalarConstraints, e.getKey())
+                        )).toList();
 
-                    List<String> rawConstraints = constraints.distributions().get(key);
-                    Set<Enum<?>> resolvedConstraints =
-                            (rawConstraints == null || rawConstraints.isEmpty())
-                                    ? Set.of()
-                                    : resolveEnumSet(encodedValue, rawConstraints,
-                                    "constraints.distributions[" + key + "]");
+        this.distributions = (distributionPreferences == null) ? List.of() :
+                encodedValues.distributions().entrySet().stream()
+                        .map(e -> {
+                            DistributionProperties key = e.getKey();
+                            EnumEncodedValue<?> encodedValue = e.getValue();
 
-                    return new DistributionEntry(
-                            encodedValue,
-                            resolveEnumSet(
+                            List<String> rawConstraints = getOrNull(distributionConstraints, key);
+                            Set<Enum<?>> resolvedConstraints =
+                                    (rawConstraints == null || rawConstraints.isEmpty())
+                                            ? Set.of()
+                                            : resolveEnumSet(encodedValue, rawConstraints,
+                                            "constraints.distributions[" + key + "]");
+
+                            return new DistributionEntry(
                                     encodedValue,
-                                    requireDistributionPreference(preferences, key),
-                                    "preferences.distributions[" + key + "]"),
-                            resolvedConstraints);
-                })
-                .toList();
+                                    resolveEnumSet(
+                                            encodedValue,
+                                            require(distributionPreferences, key, "preferences.distributions"),
+                                            "preferences.distributions[" + key + "]"),
+                                    resolvedConstraints);
+                        })
+                        .toList();
     }
 
     @Override
@@ -138,26 +142,17 @@ public class CustomWeighting implements Weighting {
         return NAME;
     }
 
-    private static double requireScalarPreference(Preferences preferences, ScalarProperties key) {
-        ScalarDouble value = preferences.scalars().get(key);
+    private static <K, V> V require(Map<K, V> map, K key, String mapName) {
+        V value = map.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("preferences.scalars is missing key: " + key);
+            throw new IllegalArgumentException(mapName + " is missing key: " + key);
         }
-        return value.value();
+        return value;
     }
 
     @Nullable
-    private static ScalarRange getOrNull(PreProcessingConstraints constraints, ScalarProperties key) {
-        return constraints.scalars().get(key);
-    }
-
-    private static List<String> requireDistributionPreference(Preferences preferences,
-                                                              DistributionProperties key) {
-        List<String> value = preferences.distributions().get(key);
-        if (value == null) {
-            throw new IllegalArgumentException("preferences.distributions is missing key: " + key);
-        }
-        return value;
+    private static <K, V> V getOrNull(@Nullable Map<K, V> map, K key) {
+        return map == null ? null : map.get(key);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -191,24 +186,6 @@ public class CustomWeighting implements Weighting {
 
     public record EncodedValues(Map<ScalarProperties, DecimalEncodedValue> scalars,
                                 Map<DistributionProperties, EnumEncodedValue<?>> distributions) {
-
-        public EncodedValues {
-            if (scalars.size() != ScalarProperties.values().length) {
-                throw new IllegalStateException(
-                        "EncodedValues.scalars must contain an encoded value for every "
-                                + ScalarProperties.class.getSimpleName()
-                                + ", expected " + ScalarProperties.values().length
-                                + " but got " + scalars.size());
-            }
-
-            if (distributions.size() != DistributionProperties.values().length) {
-                throw new IllegalStateException(
-                        "EncodedValues.distributions must contain an encoded value for every "
-                                + DistributionProperties.class.getSimpleName()
-                                + ", expected " + DistributionProperties.values().length
-                                + " but got " + distributions.size());
-            }
-        }
     }
 
     private record CalcResult(boolean isAccessible, double weight) {
