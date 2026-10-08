@@ -16,9 +16,8 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties(GHConfigurationProperties.class)
 public class GraphHopperConfig {
-    private static final String PROFILE_NAME = "custom_profile";
-    private static final String NAVIGATION_MODE_KEY = "navigation_mode";
-    private static final String NAVIGATION_MODE = "bike";
+    public static final String PROFILE_NAME = "custom_profile";
+
     private static final String SRTM_PROVIDER_CACHE_DIR_NAME = "srtm";
 
     private final GHConfigurationProperties properties;
@@ -35,7 +34,6 @@ public class GraphHopperConfig {
                 .setGraphHopperLocation(properties.graphCacheDir())
                 .setProfiles(new Profile(PROFILE_NAME)
                         .setWeighting(CustomWeighting.NAME)
-                        .putHint(NAVIGATION_MODE_KEY, NAVIGATION_MODE)
                 );
 
         hopper.getCHPreparationHandler().setCHProfiles(List.of());

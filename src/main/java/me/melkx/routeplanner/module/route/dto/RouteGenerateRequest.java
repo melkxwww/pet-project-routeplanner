@@ -8,7 +8,7 @@ import me.melkx.routeplanner.core.*;
 
 import java.util.List;
 
-public record RouteGenerateRequest(@Valid Route route, @Null Preferences preferences,
+public record RouteGenerateRequest(@Valid Route route, @Null BakedRouteParameters preferences,
                                    @Null Constraints constraints) {
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
@@ -46,7 +46,7 @@ public record RouteGenerateRequest(@Valid Route route, @Null Preferences prefere
         }
     }
 
-    public record Constraints(@Null PreProcessingConstraints preProcessing,
-                              @Null PostProcessingConstraints postProcessing) {
+    public record Constraints(@Null BakedRouteParameterConstraints routeParameterConstraints,
+                              @Null BestRouteCandidateConstraints bestRouteConstraints) {
     }
 }

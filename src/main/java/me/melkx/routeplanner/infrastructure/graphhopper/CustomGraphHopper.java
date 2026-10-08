@@ -5,8 +5,7 @@ import com.graphhopper.routing.WeightingFactory;
 import com.graphhopper.routing.ev.*;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PMap;
-import me.melkx.routeplanner.core.PreProcessingConstraints;
-import me.melkx.routeplanner.core.Preferences;
+import me.melkx.routeplanner.core.GeneratorSettings;
 import me.melkx.routeplanner.core.SurfaceType;
 import me.melkx.routeplanner.core.property.DistributionProperties;
 import me.melkx.routeplanner.core.property.ScalarProperties;
@@ -14,10 +13,10 @@ import me.melkx.routeplanner.core.property.ScalarProperties;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class CustomGraphHopper extends GraphHopper {
-    public static final String PREFERENCES_HINT_KEY = "preferences";
-    public static final String CONSTRAINTS_HINT_KEY = "constraints";
+    public static final String GENERATOR_SETTINGS_HINT_KEY = "generator_settings";
 
     private static final String PICTURESQUENESS_KEY = "picturesqueness";
     private static final String SHADINESS_KEY = "shadiness";
@@ -30,7 +29,7 @@ public class CustomGraphHopper extends GraphHopper {
     protected WeightingFactory createWeightingFactory() {
         return (profile, pMap, b) -> {
             if (Objects.equals(profile.getWeighting(), CustomWeighting.NAME)) {
-                CustomWeighting.EncodedValues encodedValues = new CustomWeighting.EncodedValues(
+                CustomWeighting.BakedRouteParameterEvs bakedRouteParameterEvs = new CustomWeighting.BakedRouteParameterEvs(
                         Map.ofEntries(
                                 Map.entry(ScalarProperties.PICTURESQUENESS, encodingManager.getDecimalEncodedValue(PICTURESQUENESS_KEY)),
                                 Map.entry(ScalarProperties.SHADINESS, encodingManager.getDecimalEncodedValue(SHADINESS_KEY)),
@@ -46,10 +45,10 @@ public class CustomGraphHopper extends GraphHopper {
                                 )
                         ));
 
-                Preferences preferences = pMap.getObject(PREFERENCES_HINT_KEY, new Preferences(null, null));
-                PreProcessingConstraints constraints = pMap.getObject(CONSTRAINTS_HINT_KEY, new PreProcessingConstraints(null, null));
+                GeneratorSettings settings = Optional.ofNullable((GeneratorSettings) pMap.getObject(GENERATOR_SETTINGS_HINT_KEY, null))
+                        .orElseThrow(() -> new IllegalArgumentException("settings cannot be null"));
 
-                return new CustomWeighting(encodedValues, preferences, constraints);
+                return new CustomWeighting(bakedRouteParameterEvs, settings);
             }
 
             return CustomGraphHopper.super.createWeighting(profile, pMap, b);

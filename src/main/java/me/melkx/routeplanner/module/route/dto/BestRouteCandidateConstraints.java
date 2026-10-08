@@ -1,6 +1,6 @@
-package me.melkx.routeplanner.core;
+package me.melkx.routeplanner.module.route.dto;
 
-public record PostProcessingConstraints(Range durationS, Range distanceM) {
+public record BestRouteCandidateConstraints(Range distanceM, Range durationS) {
     public record Range(Double min, Double max) {
         public Range {
             if(min < max)

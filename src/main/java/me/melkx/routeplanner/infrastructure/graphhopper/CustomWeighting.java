@@ -4,15 +4,13 @@ import com.graphhopper.routing.ev.DecimalEncodedValue;
 import com.graphhopper.routing.ev.EnumEncodedValue;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
-import me.melkx.routeplanner.core.PreProcessingConstraints;
-import me.melkx.routeplanner.core.Preferences;
+import me.melkx.routeplanner.core.GeneratorSettings;
 import me.melkx.routeplanner.core.property.DistributionProperties;
 import me.melkx.routeplanner.core.property.ScalarProperties;
 import me.melkx.routeplanner.core.property.ScalarRange;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CustomWeighting implements Weighting {
     public static final String NAME = "custom_weighting";
@@ -20,48 +18,45 @@ public class CustomWeighting implements Weighting {
     private static final double MIN_MULTIPLIER = 1.0;
     private static final double DISTRIBUTION_PENALTY = 1.0;
     private static final double BLOCKED_WEIGHT = Double.POSITIVE_INFINITY;
+    private static final double NOISE_AMPLITUDE = 0.2;
+    private static final long SEED_SALT = 0x9E3779B97F4A7C15L;
 
     private final List<ScalarEntry> scalars;
     private final List<DistributionEntry> distributions;
+    private final int seed;
 
-    public CustomWeighting(EncodedValues encodedValues,
-                           Preferences preferences,
-                           PreProcessingConstraints constraints) {
-        Map<ScalarProperties, Double> scalarPreferences = preferences.scalars();
-        Map<DistributionProperties, List<String>> distributionPreferences = preferences.distributions();
-        Map<ScalarProperties, ScalarRange> scalarConstraints = constraints.scalars();
-        Map<DistributionProperties, List<String>> distributionConstraints = constraints.distributions();
+    public CustomWeighting(BakedRouteParameterEvs routeParameterEvs,
+                           GeneratorSettings settings) {
+        this.scalars = new ArrayList<>();
+        this.distributions = new ArrayList<>();
+        this.seed = settings.seed();
 
-        this.scalars = (scalarPreferences == null) ? List.of() :
-                encodedValues.scalars().entrySet().stream()
-                        .map(e -> new ScalarEntry(
-                                e.getValue(),
-                                require(scalarPreferences, e.getKey(), "preferences.scalars"),
-                                getOrNull(scalarConstraints, e.getKey())
-                        )).toList();
+        for (ScalarProperties key : routeParameterEvs.scalars().keySet()) {
+            var ev = routeParameterEvs.scalars().get(key);
+            var preference = Optional.of(settings.routeParameters().scalars().get(key))
+                    .orElseThrow(() -> new IllegalArgumentException("routeParameters.scalars.value cannot be null"));
+            var constraint = settings.routeParameterConstraints().scalars().get(key);
 
-        this.distributions = (distributionPreferences == null) ? List.of() :
-                encodedValues.distributions().entrySet().stream()
-                        .map(e -> {
-                            DistributionProperties key = e.getKey();
-                            EnumEncodedValue<?> encodedValue = e.getValue();
+            scalars.add(new ScalarEntry(ev, preference, constraint));
+        }
 
-                            List<String> rawConstraints = getOrNull(distributionConstraints, key);
-                            Set<Enum<?>> resolvedConstraints =
-                                    (rawConstraints == null || rawConstraints.isEmpty())
-                                            ? Set.of()
-                                            : resolveEnumSet(encodedValue, rawConstraints,
-                                            "constraints.distributions[" + key + "]");
+        for (DistributionProperties key : routeParameterEvs.distributions().keySet()) {
+            var ev = routeParameterEvs.distributions().get(key);
+            var preferences = Optional.ofNullable(settings.routeParameters().distributions().get(key))
+                    .orElseThrow(() -> new IllegalArgumentException("routeParameters.distributions.value cannot be null"));
+            var constraints = settings.routeParameterConstraints().distributions().get(key);
 
-                            return new DistributionEntry(
-                                    encodedValue,
-                                    resolveEnumSet(
-                                            encodedValue,
-                                            require(distributionPreferences, key, "preferences.distributions"),
-                                            "preferences.distributions[" + key + "]"),
-                                    resolvedConstraints);
-                        })
-                        .toList();
+            Enum<?>[] linkedEnums = key.getLinkedClass().getEnumConstants();
+            Set<Enum<?>> convertedPreferences = new HashSet<>();
+            Set<Enum<?>> convertedConstraints = new HashSet<>();
+
+            for (Enum<?> linkedEnum : linkedEnums) {
+                if (preferences.contains(linkedEnum.name())) convertedPreferences.add(linkedEnum);
+                if (constraints.contains(linkedEnum.name())) convertedConstraints.add(linkedEnum);
+            }
+
+            distributions.add(new DistributionEntry(ev, convertedPreferences, convertedConstraints));
+        }
     }
 
     @Override
@@ -81,8 +76,9 @@ public class CustomWeighting implements Weighting {
             return BLOCKED_WEIGHT;
         }
 
-        return edge.getDistance()
-                * (MIN_MULTIPLIER + scalarResult.weight() + distributionResult.weight());
+        double base = MIN_MULTIPLIER + scalarResult.weight() + distributionResult.weight();
+        double noise = 1.0 + NOISE_AMPLITUDE * edgeNoise(edge);
+        return edge.getDistance() * base * noise;
     }
 
     private CalcResult calcScalarParams(EdgeIteratorState edge) {
@@ -117,6 +113,18 @@ public class CustomWeighting implements Weighting {
         return CalcResult.accessible(result);
     }
 
+    private double edgeNoise(EdgeIteratorState edge) {
+        long key = edge.getEdge();
+        long mixed = mix64(key ^ ((long) seed * SEED_SALT));
+        return (mixed >>> 11) * 0x1.0p-53;
+    }
+
+    private static long mix64(long z) {
+        z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
+        z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
+        return z ^ (z >>> 31);
+    }
+
     @Override
     public long calcEdgeMillis(EdgeIteratorState edge, boolean reverse) {
         return 0;
@@ -142,50 +150,8 @@ public class CustomWeighting implements Weighting {
         return NAME;
     }
 
-    private static <K, V> V require(Map<K, V> map, K key, String mapName) {
-        V value = map.get(key);
-        if (value == null) {
-            throw new IllegalArgumentException(mapName + " is missing key: " + key);
-        }
-        return value;
-    }
-
-    @Nullable
-    private static <K, V> V getOrNull(@Nullable Map<K, V> map, K key) {
-        return map == null ? null : map.get(key);
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Set<Enum<?>> resolveEnumSet(EnumEncodedValue<?> encodedValue,
-                                               List<String> rawValues,
-                                               String source) {
-        if (rawValues.isEmpty()) {
-            throw new IllegalArgumentException(source + " must not be empty");
-        }
-
-        Enum<?>[] constants = encodedValue.getValues();
-        Map<String, Enum<?>> byName = new EnumMap(constants[0].getDeclaringClass());
-        for (Enum<?> c : constants) {
-            byName.put(c.name().toLowerCase(Locale.ROOT), c);
-        }
-
-        return rawValues.stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .map(s -> {
-                    Enum<?> e = byName.get(s);
-                    if (e == null) {
-                        throw new IllegalArgumentException(
-                                "Unknown value '" + s + "' in " + source
-                                        + " for " + encodedValue.getName()
-                                        + ". Allowed: " + byName.keySet());
-                    }
-                    return e;
-                })
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    public record EncodedValues(Map<ScalarProperties, DecimalEncodedValue> scalars,
-                                Map<DistributionProperties, EnumEncodedValue<?>> distributions) {
+    public record BakedRouteParameterEvs(Map<ScalarProperties, DecimalEncodedValue> scalars,
+                                         Map<DistributionProperties, EnumEncodedValue<?>> distributions) {
     }
 
     private record CalcResult(boolean isAccessible, double weight) {

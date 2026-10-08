@@ -8,9 +8,10 @@ import me.melkx.routeplanner.core.property.ScalarRange;
 import java.util.List;
 import java.util.Map;
 
-public record PreProcessingConstraints(Map<ScalarProperties, ScalarRange> scalars,
-                                       Map<DistributionProperties, List<String>> distributions) {
-    public PreProcessingConstraints {
+public record BakedRouteParameterConstraints(Map<ScalarProperties, ScalarRange> scalars,
+                                             Map<DistributionProperties, List<String>> distributions) {
+    public BakedRouteParameterConstraints {
         PropertiesValueValidator.validateDistributionValues(distributions);
     }
+
 }
